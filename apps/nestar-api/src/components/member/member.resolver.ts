@@ -1,4 +1,4 @@
-import { Resolver } from '@nestjs/graphql';
+import { Mutation, Query, Resolver } from '@nestjs/graphql';
 import { MemberService } from './member.service';
 
 @Resolver()
