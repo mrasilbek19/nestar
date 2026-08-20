@@ -32,4 +32,17 @@ export class MemberResolver {
         return this.memberService.getMember();
     }
 
+    /* ADMIN */
+    @Mutation(() => String)
+    public async getAllMembersByAdmin(): Promise<string> {
+        console.log('Mutation: getAllMembersByAdmin');
+        return this.memberService.getAllMembersByAdmin();
+    }
+
+    @Mutation(() => String)
+    public async updateMemberByAdmin(): Promise<string> {
+        console.log('Mutation: updateMember');
+        return this.memberService.updateMemberByAdmin();
+    }
+
 }
