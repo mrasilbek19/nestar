@@ -16,6 +16,8 @@ export const availablePropertySorts = [
     'propertyPrice',
 ];
 
+export const availableCommentSorts = ['createdAt', 'updatedAt']
+
 export const availableBoardArticles = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews']
 
 /** IMAGE CONFIGURATION **/
