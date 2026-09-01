@@ -20,5 +20,6 @@ import PropertySchema from '../../schemas/Property.model';
     MemberModule,
   ],
   providers: [PropertyResolver, PropertyService],
+  exports: [PropertyModule],
 })
 export class PropertyModule { }
