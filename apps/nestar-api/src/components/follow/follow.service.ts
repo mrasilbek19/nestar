@@ -72,10 +72,19 @@ export class FollowService {
             followingId: followingId,
             followerId: followerId,
         });
+
         if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-        await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: -1 });
-        await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: -1 });
+        await this.memberService.memberStatsEditor({
+            _id: followerId,
+            targetKey: 'memberFollowings',
+            modifier: -1
+        });
+        await this.memberService.memberStatsEditor({
+            _id: followingId,
+            targetKey: 'memberFollowers',
+            modifier: -1
+        });
 
         return result;
     }
@@ -86,13 +95,8 @@ export class FollowService {
     ): Promise<Followings> {
         const { page, limit, search } = input;
 
-        if (!search?.followerId)
-            throw new InternalServerErrorException(Message.BAD_REQUEST);
-
-        const match: T = {
-            followerId: search?.followerId,
-        };
-
+        if (!search?.followerId) throw new InternalServerErrorException(Message.BAD_REQUEST);
+        const match: T = { followerId: search?.followerId };
         console.log('match:', match);
 
         const result = await this.followModel
