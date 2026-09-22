@@ -62,14 +62,14 @@ export class BatchService {
       })
       .exec();
 
-    const promisedList = agents.map(async (ele: Member) => {
+    const promisedList = agents.map(async (member: Member) => {
       const {
         _id,
         memberProperties,
         memberLikes,
         memberArticles,
         memberViews,
-      } = ele;
+      } = member;
 
       const rank =
         memberProperties * 5 +
