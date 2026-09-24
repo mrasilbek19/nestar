@@ -103,8 +103,8 @@ export class PISearch {
     memberId?: ObjectId;
 
     @IsOptional()
-    @Field(() => PropertyLocation, { nullable: true })
-    locationList?: PropertyLocation;
+    @Field(() => [PropertyLocation], { nullable: true })
+    locationList?: PropertyLocation[];
 
     @IsOptional()
     @Field(() => [PropertyType], { nullable: true })
