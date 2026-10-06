@@ -9,6 +9,7 @@ import * as url from 'url';
 interface MessagePayload {
   event: string;
   text: string;
+  memberData: Member;
 }
 
 interface InfoPayload {
@@ -22,7 +23,8 @@ interface InfoPayload {
 export class SocketGateway implements OnGatewayInit {
   private logger: Logger = new Logger('SocketEventsGateway');
   private summaryClient: number = 0;
-  private clientsAuthMap = new Map<WebSocket, Member>()
+  private clientsAuthMap = new Map<WebSocket, Member>();
+  private messagesList: MessagePayload[] = [];
 
   constructor(private authService: AuthService) { }
 
@@ -59,8 +61,8 @@ export class SocketGateway implements OnGatewayInit {
       memberData: authMember,
       action: 'joined',
     };
-
     this.emitMessage(infoMsg);
+    client.send(JSON.stringify({ event: "getMessages", list: this.messagesList }));
   }
 
   public handleDisconnect(client: WebSocket) {
@@ -77,15 +79,20 @@ export class SocketGateway implements OnGatewayInit {
       memberData: authMember,
       action: 'left',
     };
-
     this.broadcastMessage(client, infoMsg);
   }
 
   @SubscribeMessage('message')
   public async handleMessage(client: WebSocket, payload: string): Promise<void> {
-    const newMessage: MessagePayload = { event: 'message', text: payload };
+    const authMember = this.clientsAuthMap.get(client);
+    const newMessage: MessagePayload = { event: 'message', text: payload, memberData: authMember };
 
-    this.logger.verbose(`NEW MESSAGE: ${payload}`);
+    const clientNick: string = authMember?.memberNick ?? 'Guest';
+    this.logger.verbose(`NEW MESSAGE [${clientNick}]: ${payload}`);
+
+    this.messagesList.push(newMessage);
+    if (this.messagesList.length > 5) this.messagesList.splice(0, this.messagesList.length - 5);
+
     this.emitMessage(newMessage);
   }
 
